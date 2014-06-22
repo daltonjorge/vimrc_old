@@ -1,26 +1,50 @@
-set nocompatible              " be iMproved
-filetype off                  " required!
+let iCanHazNeoBundle=1
+let neobundle_readme=expand($HOME.'/.vim/bundle/neobundle.vim/README.md')
+if !filereadable(neobundle_readme)
+	echo "Installing NeoBundle.."
+	echo ""
+	silent !mkdir -p $HOME/.vim/bundle
+	silent !git clone https://github.com/Shougo/neobundle.vim $HOME/.vim/bundle/neobundle.vim
+	let iCanHazNeoBundle=0
+endif
 
-set rtp+=~/.vim/bundle/vundle/
-call vundle#rc()
+if has('vim_starting')
+	set nocompatible               " Be iMproved
+	set runtimepath+=~/.vim/bundle/neobundle.vim/
+endif
 
-" let Vundle manage Vundle
-" required! 
-Bundle 'gmarik/vundle'
-Bundle 'bling/vim-airline'
-Bundle 'tpope/vim-fugitive'
-Bundle 'tpope/vim-commentary'
-"Bundle 'chriskempson/base16-vim'
-Bundle 'L9'
-Bundle 'FuzzyFinder'
-Bundle 'terryma/vim-multiple-cursors'
-Bundle 'christoomey/vim-tmux-navigator'
+"filetype off                  " required!
 
-"let g:airline#extensions#tabline#enabled = 1
+" Required:
+call neobundle#begin(expand('~/.vim/bundle/'))
 
-set number        " Show line numbers
-"syntax enable     " Use syntax highlighting
-syntax on
+" Let NeoBundle manage NeoBundle
+" Required:
+NeoBundleFetch 'Shougo/neobundle.vim'
+
+" My Bundles here:
+NeoBundle 'Shougo/vimproc', {
+					\ 'build' : {
+					\     'mac' : 'make -f make_mac.mak',
+					\     'unix' : 'make -f make_unix.mak',
+					\    },
+					\ }
+NeoBundle 'bling/vim-airline'
+NeoBundle 'tpope/vim-fugitive'
+NeoBundle 'tpope/vim-commentary'
+NeoBundle 'Shougo/unite.vim'
+NeoBundle 'terryma/vim-multiple-cursors'
+NeoBundle 'christoomey/vim-tmux-navigator'
+NeoBundle 'flazz/vim-colorschemes'
+
+call neobundle#end()
+
+" Required:
+filetype plugin indent on
+
+NeoBundleCheck
+
+set number
 set background=dark
 set laststatus=2
 set encoding=utf-8
@@ -32,9 +56,7 @@ set backspace=eol,start,indent
 set cursorline
 set tabstop=2
 set shiftwidth=2
-
-nnoremap <C-p> :<C-u>FufFile **/<CR>
-nnoremap <C-b> :<C-u>FufBuffer **/<CR>
+syntax on
 
 """"""""""""""""""""""""""""""
 " airline
@@ -47,3 +69,8 @@ let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#show_tab_nr = 1
 
 let mapleader=","
+
+nnoremap <C-p> :Unite file_rec/async<cr>
+nnoremap <space>s :Unite -quick-match buffer<cr>
+
+colorscheme railscasts
